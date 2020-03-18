@@ -15,11 +15,11 @@ export default function Score() {
         {range(2).map(i => {
           return (
             <div className="position-relative mt-4">
-              {range(11).map(i => {
+              {range(13).map(i => {
                 return (
                   <div
                     className={classnames('w-100 border-dark', {
-                      'border-bottom': i < 1 || i < 6,
+                      'border-bottom': i > 1 && i < 8,
                     })}
                     style={{ height: spaceHeight }}
                   ></div>
@@ -41,6 +41,13 @@ export default function Score() {
                         }
                       )}
                     >
+                      <button
+                        className="btn btn-dark btn-sm position-absolute px-1 py-0"
+                        style={{ top: 0, right: 0 }}
+                      >
+                        <i className="fas fa-times"></i>
+                      </button>
+
                       <div
                         className="position-absolute text-center"
                         style={{
