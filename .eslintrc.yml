@@ -6,3 +6,4 @@ rules:
   - error
   - singleQuote: true
     trailingComma: es5
+  jsx-a11y/alt-text: 0
