@@ -1,24 +1,24 @@
-import { range } from 'lodash';
-
+import accidentals from './accidentals';
+import { noteDurations, restDurations } from './durations';
 const loadImage = (path: string) => require(`../images/${path}.png`);
 
-const lightNoteImages: any[] = range(6).map(i =>
-  loadImage(`light/note${2 ** i}`)
+const lightNoteImages: any[] = noteDurations.map(i =>
+  loadImage(`light/note${i}`)
 );
-const lightRestImages: any[] = range(5).map(i =>
-  loadImage(`light/rest${2 ** i}`)
+const lightRestImages: any[] = restDurations.map(i =>
+  loadImage(`light/rest${i}`)
 );
 const lightAccidentalImages: any[] = ['flat', 'natural', 'sharp'].map(name =>
   loadImage(`light/${name}`)
 );
 
-const darkNoteImages: any[] = range(6).map(i =>
-  loadImage(`dark/note${2 ** i}`)
+const darkNoteImages: any[] = noteDurations.map(i =>
+  loadImage(`dark/note${i}`)
 );
-const darkRestImages: any[] = range(5).map(i =>
-  loadImage(`dark/rest${2 ** i}`)
+const darkRestImages: any[] = restDurations.map(i =>
+  loadImage(`dark/rest${i}`)
 );
-const darkAccidentalImages: any[] = ['flat', 'natural', 'sharp'].map(name =>
+const darkAccidentalImages: any[] = accidentals.map(name =>
   loadImage(`dark/${name}`)
 );
 

@@ -1,6 +1,13 @@
 import React from 'react';
 
-export default function Header() {
+type Props = {
+  onClickPlay: () => void;
+  onClickDownload: () => void;
+};
+
+export default function Header(props: Props) {
+  const { onClickPlay, onClickDownload } = props;
+
   return (
     <header className="mt-3 d-flex">
       <div>
@@ -14,11 +21,11 @@ export default function Header() {
         </p>
       </div>
       <div className="ml-auto mb-2">
-        <button className="btn btn-outline-info mr-2">
+        <button className="btn btn-outline-info mr-2" onClick={onClickPlay}>
           <i className="fas fa-play"></i>
           <span className="ml-2 d-none d-sm-inline">Play</span>
         </button>
-        <button className="btn btn-outline-secondary">
+        <button className="btn btn-outline-secondary" onClick={onClickDownload}>
           <i className="fas fa-arrow-down"></i>
           <span className="ml-2 d-none d-sm-inline">Download</span>
         </button>

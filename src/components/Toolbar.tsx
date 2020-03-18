@@ -3,55 +3,99 @@ import { reverse } from 'lodash';
 import classnames from 'classnames';
 
 import { light } from '../constants/images';
+import accidentals from '../constants/accidentals';
+import { noteDurations, restDurations } from '../constants/durations';
 
 const { noteImages, restImages, accidentalImages } = light;
 
-export default function Header() {
+type Props = {
+  isAutoDuration: boolean;
+  onChangeIsAutoDuration: () => void;
+  isRest: boolean;
+  duration: number;
+  autoDuration: number | null;
+  onChangeDuration: (duration: number) => void;
+  onChangeIsRest: () => void;
+  accidental: string;
+  onChangeAccidental: (accidental: string) => void;
+  octave: number;
+  onChangeOctave: (octave: number) => void;
+};
+
+export default function Header(props: Props) {
+  const {
+    isAutoDuration,
+    onChangeIsAutoDuration,
+    isRest,
+    onChangeIsRest,
+    duration,
+    autoDuration,
+    onChangeDuration,
+    accidental,
+    onChangeAccidental,
+    octave,
+    onChangeOctave,
+  } = props;
+
   return (
     <div className="row">
       <div className="col-sm-5 mb-3">
         <div className="d-flex">
           長さ
           <label className="ml-auto">
-            <input type="checkbox" />
-            <label className="ml-2">自動</label>
+            <input
+              type="checkbox"
+              onChange={onChangeIsAutoDuration}
+              checked={isAutoDuration}
+            />
+            <span className="ml-2">自動</span>
           </label>
           <label className="ml-2">
-            <input type="checkbox" />
-            <label className="ml-2">休符</label>
+            <input type="checkbox" onChange={onChangeIsRest} checked={isRest} />
+            <span className="ml-2">休符</span>
           </label>
         </div>
         <div>
           <div className="btn-group btn-group-sm w-100">
-            {reverse(noteImages).map((image, i) => (
-              <button
-                key={i}
-                type="button"
-                className={classnames('btn btn-secondary pb-2', {
-                  active: Math.random() < 0.8,
-                })}
-              >
-                <img src={image} width={20} height={20} />
-              </button>
-            ))}
-            {false &&
-              reverse(restImages).map((image, i) => (
-                <button
-                  key={i}
-                  type="button"
-                  className={classnames('btn btn-secondary pb-2', {
-                    active: Math.random() < 0.8,
-                  })}
-                >
-                  <img src={image} width={20} height={20} />
-                </button>
-              ))}
+            {!isRest
+              ? reverse(noteImages.slice(0, restImages.length)).map(
+                  (image, i) => (
+                    <button
+                      key={i}
+                      type="button"
+                      className={classnames('btn btn-secondary pb-2', {
+                        active: noteDurations[i] === duration,
+                        'bg-dark':
+                          isAutoDuration && noteDurations[i] === autoDuration,
+                      })}
+                      onClick={() => onChangeDuration(noteDurations[i])}
+                      disabled={isAutoDuration}
+                    >
+                      <img src={image} width={20} height={20} />
+                    </button>
+                  )
+                )
+              : reverse([...restImages]).map((image, i) => (
+                  <button
+                    key={i}
+                    type="button"
+                    className={classnames('btn btn-secondary pb-2', {
+                      active: restDurations[i] === duration,
+                      'bg-dark':
+                        isAutoDuration && noteDurations[i] === autoDuration,
+                    })}
+                    onClick={() => onChangeDuration(restDurations[i])}
+                    disabled={isAutoDuration}
+                  >
+                    <img src={image} width={20} height={20} />
+                  </button>
+                ))}
           </div>
         </div>
       </div>
 
       <div className="col-sm-4 mb-3">
-        <div className="mb-3">変化</div>
+        <div className="mb-2">変化</div>
         <div>
           <div className="btn-group btn-group-sm w-100">
             {accidentalImages.map((image, i) => (
@@ -59,8 +103,9 @@ export default function Header() {
                 key={i}
                 type="button"
                 className={classnames('btn btn-secondary pb-2', {
-                  active: Math.random() < 0.8,
+                  active: accidentals[i] === accidental,
                 })}
+                onClick={() => onChangeAccidental(accidentals[i])}
               >
                 <img src={image} width={20} height={20} />
               </button>
@@ -72,15 +117,16 @@ export default function Header() {
       <div className="col-sm-3 mb-3">
         <div className="d-flex mb-4">
           高さ
-          <span className="ml-auto">0</span>
+          <span className="ml-auto">{octave}</span>
         </div>
         <div>
           <input
             type="range"
             className="custom-range"
-            min="-5"
+            min="3"
             max="5"
-            value="0"
+            value={octave}
+            onChange={(e: any) => onChangeOctave(parseInt(e.target.value))}
           />
         </div>
       </div>

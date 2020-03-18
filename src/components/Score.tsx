@@ -14,10 +14,11 @@ export default function Score() {
       <div className="col">
         {range(2).map(i => {
           return (
-            <div className="position-relative mt-4">
+            <div className="position-relative mt-4" key={i}>
               {range(13).map(i => {
                 return (
                   <div
+                    key={i}
                     className={classnames('w-100 border-dark', {
                       'border-bottom': i > 1 && i < 8,
                     })}
@@ -40,6 +41,7 @@ export default function Score() {
                           'border-transparent': Math.random() > 0.5,
                         }
                       )}
+                      key={i}
                     >
                       <button
                         className="btn btn-dark btn-sm position-absolute px-1 py-0"
