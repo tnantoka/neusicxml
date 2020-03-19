@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { remove } from 'lodash';
+import { Synth, Part, Transport } from 'tone';
 
 import Header from './components/Header';
 import Toolbar from './components/Toolbar';
@@ -9,11 +10,28 @@ import Demo from './components/Demo';
 import accidentals from './constants/accidentals';
 import { noteDurations } from './constants/durations';
 import { Note } from './constants/types';
+import Builder from './utils/builder';
 
 export default function App() {
   // Header
   const onClickPlay = () => {
-    console.log('play');
+    //Transport.clear();
+    const synth = new Synth().toMaster();
+
+    const events = new Builder(notes).events();
+    const seq = new Part(
+      (time, note) => {
+        synth.triggerAttackRelease(
+          note.note,
+          note.duration,
+          time,
+          note.velocity
+        );
+      },
+      events
+    );
+    seq.start();
+    Transport.start();
   };
   const onClickDownload = () => {
     console.log('download');
@@ -82,9 +100,16 @@ export default function App() {
     setNotes([...notes]);
   };
 
+  const onClear = () => {
+    if (!window.confirm('楽譜を削除しますか？')) {
+      return;
+    }
+    setNotes([]);
+  };
+
   return (
     <div className="container mt-3 mb-4">
-      <Header {...{ onClickPlay, onClickDownload }} />
+      <Header {...{ onClickPlay, onClickDownload, notes }} />
       <Toolbar
         {...{
           isAutoDuration,
@@ -104,7 +129,7 @@ export default function App() {
         {...{ isAutoDuration, onAdd, duration, autoDuration, onChangeAutoDuration, octave, isRest }}
       />
       <Score
-        {...{ notes, selectedNote, onSelect, editingNote, onEdit, onDelete, onChangeLyric }}
+        {...{ notes, selectedNote, onSelect, editingNote, onEdit, onDelete, onChangeLyric, onClear }}
       />
       <Demo />
       <p className="text-center mt-3">
