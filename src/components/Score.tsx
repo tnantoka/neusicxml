@@ -1,54 +1,94 @@
 import React from 'react';
-import { range, sample } from 'lodash';
+import { range, sample, chunk } from 'lodash';
 import classnames from 'classnames';
 
 import { dark } from '../constants/images';
+import { Note } from '../constants/types';
+import { noteDurations, restDurations } from '../constants/durations';
 
 const { noteImages, restImages } = dark;
 
 const spaceHeight = 12;
 
-export default function Score() {
+type Props = {
+  notes: Note[];
+  selectedNote: Note | null;
+  onSelect: (note: Note) => void;
+  editingNote: Note | null;
+  onEdit: (note: Note) => void;
+  onDelete: (note: Note) => void;
+  onChangeLyric: (lyric: string) => void;
+};
+
+function Lines() {
+  return (
+    <>
+      {range(13).map(i => {
+        return (
+          <div
+            key={i}
+            className={classnames('w-100 border-dark', {
+              'border-bottom': i > 1 && i < 8,
+            })}
+            style={{ height: spaceHeight }}
+          ></div>
+        );
+      })}
+    </>
+  );
+}
+
+export default function Score(props: Props) {
+  const { notes, selectedNote, onSelect, editingNote, onEdit, onDelete, onChangeLyric } = props;
+
   return (
     <div className="row">
       <div className="col">
-        {range(2).map(i => {
+        {notes.length < 1 && (
+          <div className="position-relative mt-4">
+            <Lines />
+          </div>
+        )}
+        {chunk(notes, 8).map((chunkedNotes, i) => {
           return (
             <div className="position-relative mt-4" key={i}>
-              {range(13).map(i => {
-                return (
-                  <div
-                    key={i}
-                    className={classnames('w-100 border-dark', {
-                      'border-bottom': i > 1 && i < 8,
-                    })}
-                    style={{ height: spaceHeight }}
-                  ></div>
-                );
-              })}
-
+              <Lines />
               <div
                 className="position-absolute d-flex"
                 style={{ left: 0, top: 0, right: 0, bottom: 0 }}
               >
-                {range(8).map(i => {
+                {chunkedNotes.map((note, j) => {
+                  const isSelected = note.id === selectedNote?.id;
+                  const isEditing = note.id === editingNote?.id;
+                  const onClickLyric = (e: any) => {
+                    e.stopPropagation();
+                    if (isEditing) {
+                      return;
+                    }
+                    (e.target as any).select();
+                    onEdit(note)
+                  };
+ 
                   return (
                     <div
                       className={classnames(
-                        'border w-100 position-relative d-flex align-items-end',
-                        {
-                          'border-dark': Math.random() < 0.5,
-                          'border-transparent': Math.random() > 0.5,
+                        'border w-100 position-relative d-flex align-items-end', {
+                          'border-dark': isSelected,
+                          'border-transparent': !isSelected,
                         }
                       )}
-                      key={i}
+                      key={note.id}
+                      onClick={() => onSelect(note)}
                     >
-                      <button
-                        className="btn btn-dark btn-sm position-absolute px-1 py-0"
-                        style={{ top: 0, right: 0 }}
-                      >
-                        <i className="fas fa-times"></i>
-                      </button>
+                      {isSelected && (
+                        <button
+                          className="btn btn-dark btn-sm position-absolute px-1 py-0"
+                          style={{ top: 0, right: 0 }}
+                          onClick={() => onDelete(note)}
+                        >
+                          <i className="fas fa-times"></i>
+                        </button>
+                      )}
 
                       <div
                         className="position-absolute text-center"
@@ -58,16 +98,11 @@ export default function Score() {
                           bottom:
                             2 +
                             spaceHeight *
-                              0.5 *
-                              (6 + Math.floor(Math.random() * 8)),
+                              0.5 * (6 + note.step.index),
                         }}
                       >
                         <img
-                          src={
-                            Math.random() < 1.0
-                              ? sample(noteImages)
-                              : sample(restImages)
-                          }
+                          src={(note.isRest ? restImages : noteImages)[noteDurations.indexOf(note.duration)]}
                           height={44}
                           width={44}
                         />
@@ -76,21 +111,27 @@ export default function Score() {
                         className="d-flex align-items-end"
                         style={{ height: spaceHeight * 3 }}
                       >
-                        {Math.random() < 0.5 ? (
-                          <input
-                            type="text"
-                            className="form-control form-control-sm text-center"
-                          />
-                        ) : (
-                          <input
-                            type="text"
-                            className="form-control-plaintext form-control-sm text-center"
-                            readOnly
-                            value="test"
-                          />
-                        )}
+                        <input
+                          type="text"
+                          className={classnames('form-control-sm text-center', {
+                            'form-control': isEditing,
+                            'form-control-plaintext': !isEditing,
+                          })}
+                          onClick={onClickLyric}
+                          onFocus={onClickLyric}
+                          value={note.lyric}
+                          onChange={e => onChangeLyric(e.target.value)}
+                        />
                       </div>
                     </div>
+                  );
+                })}
+                {range(8 - chunkedNotes.length).map(j => {
+                  return (
+                    <div
+                      className="w-100"
+                      key={j}
+                    />
                   );
                 })}
               </div>

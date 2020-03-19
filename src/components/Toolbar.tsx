@@ -1,6 +1,6 @@
 import React from 'react';
-import { reverse } from 'lodash';
 import classnames from 'classnames';
+import { UncontrolledTooltip } from 'reactstrap';
 
 import { light } from '../constants/images';
 import accidentals from '../constants/accidentals';
@@ -39,7 +39,7 @@ export default function Header(props: Props) {
 
   return (
     <div className="row">
-      <div className="col-sm-5 mb-3">
+      <div className="col-sm-6 mb-3">
         <div className="d-flex">
           長さ
           <label className="ml-auto">
@@ -48,7 +48,13 @@ export default function Header(props: Props) {
               onChange={onChangeIsAutoDuration}
               checked={isAutoDuration}
             />
-            <span className="ml-2">自動</span>
+            <UncontrolledTooltip placement="top" target="isAutoDuration">
+              鍵盤ボタンを押す長さで変わります
+            </UncontrolledTooltip>
+            <span className="ml-2">
+              自動
+              <i className="far fa-question-circle ml-1 text-muted" id="isAutoDuration"></i>
+            </span>
           </label>
           <label className="ml-2">
             <input type="checkbox" onChange={onChangeIsRest} checked={isRest} />
@@ -58,7 +64,7 @@ export default function Header(props: Props) {
         <div>
           <div className="btn-group btn-group-sm w-100">
             {!isRest
-              ? reverse(noteImages.slice(0, restImages.length)).map(
+              ? noteImages.map(
                   (image, i) => (
                     <button
                       key={i}
@@ -75,7 +81,7 @@ export default function Header(props: Props) {
                     </button>
                   )
                 )
-              : reverse([...restImages]).map((image, i) => (
+              : restImages.map((image, i) => (
                   <button
                     key={i}
                     type="button"
@@ -94,7 +100,7 @@ export default function Header(props: Props) {
         </div>
       </div>
 
-      <div className="col-sm-4 mb-3">
+      {false && (<div className="col-sm-4 mb-3">
         <div className="mb-2">変化</div>
         <div>
           <div className="btn-group btn-group-sm w-100">
@@ -112,9 +118,9 @@ export default function Header(props: Props) {
             ))}
           </div>
         </div>
-      </div>
+      </div>)}
 
-      <div className="col-sm-3 mb-3">
+      <div className="col-sm-6 mb-3">
         <div className="d-flex mb-4">
           高さ
           <span className="ml-auto">{octave}</span>
