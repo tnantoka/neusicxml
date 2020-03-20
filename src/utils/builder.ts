@@ -1,4 +1,8 @@
+import ejs from 'ejs';
+import { range } from 'lodash';
+
 import { Note } from '../constants/types';
+import template from '../constants/template';
 
 export default class Builder {
   notes: Note[]
@@ -7,12 +11,12 @@ export default class Builder {
     this.notes = notes;
   }
 
-  events() {
+  events(withRest = false) {
     const events: any[] = [];
 
     this.notes.reduce((time, note) => {
       const duration = 4 / note.duration;
-      if (note.isRest) {
+      if (note.isRest && !withRest) {
         return time + duration;
       }
 
@@ -29,34 +33,56 @@ export default class Builder {
     return events;
   }
 
-  //buildEvents() {
-  //  const events = [];
-  //  const measures = [];
-  //  notes.reduce((time, note) => {
-  //    const duration = 4 / [8, 4, 2, 1][note.duration];
-  //    const isRest = note.lyric === '休';
-  //    if (isRest) {
-  //      return time + duration;
-  //    }
+  measures() {
+    const events = this.events(true);
 
-  //    const event = {
-  //      time: `0:${time}:0`,
-  //      note: isRest
-  //        ? ''
-  //        : `${'CDEFGABC'.split('')[note.index]}${note.index < 7 ? 4 : 5}`,
-  //      duration: `${[8, 4, 2, 1][note.duration]}n`,
-  //      lyric: note.lyric,
-  //    };
+    const measures: { notes: any[]}[] = [{ notes: [] }];
 
-  //    if (!isRest) {
-  //      events.push(event);
-  //    }
-  //    measures.push(event);
+    events.forEach(event => {
+      const duration = 16 / parseInt(event.duration);
+      const prevTimes = measures[measures.length - 1].notes.reduce((result, item: any) => result + item.duration, 0);
+      const times = prevTimes + duration;
 
-  //    return time + duration;
-  //  }, 0);
+      if (times > 16) {
+        measures.push({ notes: [] });
+      }
 
-  //  return [events, measures];
-  //}
+      measures[measures.length - 1].notes.push({
+        pitch: {
+          step: event.note.split('')[0],
+          octave: event.note.split('')[1],
+        },
+        isRest: !event.note,
+        duration,
+        lyric: {
+          text: event.lyric,
+        },
+      });
+    });
 
+    measures.forEach(measure => {
+      const times = measure.notes.reduce((result, item: any) => result + item.duration, 0);
+      range(Math.floor(16 - times)).forEach(() => {
+        measure.notes.push({
+          pitch: {
+            step: '',
+            octave: '',
+          },
+          isRest: true,
+          duration: 1,
+          lyric: {
+            text: '',
+          },
+        });
+      });
+    });
+
+    return measures;
+  }
+
+  xml() {
+    const measures = this.measures();
+    const xml = ejs.render(template, { measures });
+    return xml;
+  }
 }

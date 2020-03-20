@@ -67,7 +67,7 @@ export default function Score(props: Props) {
                       if (isEditing) {
                         return;
                       }
-                      (e.target as any).select();
+                      e.target.select();
                       onEdit(note)
                     };
    
@@ -87,6 +87,7 @@ export default function Score(props: Props) {
                             className="btn btn-dark btn-sm position-absolute px-1 py-0"
                             style={{ top: 0, right: 0 }}
                             onClick={() => onDelete(note)}
+                            tabIndex={-1}
                           >
                             <i className="fas fa-times"></i>
                           </button>

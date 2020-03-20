@@ -15,8 +15,7 @@ import Builder from './utils/builder';
 export default function App() {
   // Header
   const onClickPlay = () => {
-    //Transport.clear();
-    const synth = new Synth().toMaster();
+    const synth = new Synth().toDestination();
 
     const events = new Builder(notes).events();
     const seq = new Part(
@@ -34,7 +33,14 @@ export default function App() {
     Transport.start();
   };
   const onClickDownload = () => {
-    console.log('download');
+    const xml = new Builder(notes).xml();
+    const blob = new Blob([xml], { type: 'text/xml' });
+    const link = document.createElement('a');
+    link.download = 'neusicxml.musicxml';
+    link.href = window.URL.createObjectURL(blob);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   };
 
   // Toolbar
@@ -64,6 +70,9 @@ export default function App() {
   const [octave, setOctave] = useState(4);
   const onChangeOctave = (octave: number) => {
     setOctave(octave);
+    const nextNotes = [...notes];
+    nextNotes.forEach(note => note.octave = octave);
+    setNotes(nextNotes);
   };
 
   // Keyboard
