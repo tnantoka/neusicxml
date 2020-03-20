@@ -39,7 +39,7 @@ export default function Header(props: Props) {
 
   return (
     <div className="row">
-      <div className="col-sm-6 mb-3">
+      <div className="col-sm-12 mb-3">
         <div className="d-flex">
           長さ
           <label className="ml-auto">
@@ -120,22 +120,24 @@ export default function Header(props: Props) {
         </div>
       </div>)}
 
-      <div className="col-sm-6 mb-3">
-        <div className="d-flex mb-4">
-          高さ
-          <span className="ml-auto">{octave}</span>
+      {false && (
+        <div className="col-sm-6 mb-3">
+          <div className="d-flex mb-4">
+            高さ
+            <span className="ml-auto">{octave}</span>
+          </div>
+          <div>
+            <input
+              type="range"
+              className="custom-range"
+              min="3"
+              max="5"
+              value={octave}
+              onChange={(e: any) => onChangeOctave(parseInt(e.target.value))}
+            />
+          </div>
         </div>
-        <div>
-          <input
-            type="range"
-            className="custom-range"
-            min="3"
-            max="5"
-            value={octave}
-            onChange={(e: any) => onChangeOctave(parseInt(e.target.value))}
-          />
-        </div>
-      </div>
+      )}
     </div>
   );
 }

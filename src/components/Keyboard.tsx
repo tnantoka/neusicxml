@@ -1,4 +1,6 @@
 import React, { useEffect } from 'react';
+import { chunk } from 'lodash';
+import classnames from 'classnames';
 
 import { Note, Step } from '../constants/types';
 import steps from '../constants/steps';
@@ -14,7 +16,7 @@ type Props = {
   isRest: boolean;
 };
 
-const japaneseSteps = ['ド', 'レ', 'ミ', 'ファ', 'ソ', 'ラ', 'シ', 'ド'];
+const japaneseSteps = ['ド', 'レ', 'ミ', 'ファ', 'ソ', 'ラ', 'シ'];
 
 export default function Keyboard(props: Props) {
   const { isAutoDuration, onAdd, duration, autoDuration, onChangeAutoDuration, octave, isRest } = props;
@@ -26,7 +28,7 @@ export default function Keyboard(props: Props) {
     onAdd({
       id: new Date().getTime(),
       step,
-      octave,
+      octave: step.octave,
       duration,
       lyric,
       isRest,
@@ -63,7 +65,7 @@ export default function Keyboard(props: Props) {
     onAdd({
       id: new Date().getTime(),
       step,
-      octave,
+      octave: step.octave,
       duration: autoDuration!,
       lyric,
       isRest,
@@ -73,29 +75,34 @@ export default function Keyboard(props: Props) {
 
   return (
     <div className="row">
-      <div className="col">
-        <div
-          className="btn-group btn-group-lg w-100"
-        >
-          {steps.map(step => {
-            const japanese = japaneseSteps[step.index];
-            return (
-              <button
-                key={step.index}
-                type="button"
-                className="btn btn-outline-secondary pb-2 py-5 px-1"
-                onClick={() => onClick(step, japanese)}
-                onMouseDown={onPointerDown}
-                onTouchStart={onPointerDown}
-                onMouseUp={() => onPointerUp(step, japanese)}
-                onTouchEnd={() => onPointerUp(step, japanese)}
-              >
-                {japanese}
-              </button>
-            );
-          })}
-        </div>
-      </div>
+      {chunk(steps, 7).map((chunkedSteps, i) => {
+        return (
+          <div className="col-sm-6 mb-2" key={i}>
+            <div
+              className="btn-group btn-group-lg w-100"
+            >
+              {chunkedSteps.map(step => {
+                const japanese = japaneseSteps[step.index % 7];
+                const lyric = isRest ? '' : japanese;
+                return (
+                  <button
+                    key={step.index}
+                    type="button"
+                    className="btn btn-outline-secondary pb-2 py-5 px-1"
+                    onClick={() => onClick(step, lyric)}
+                    onMouseDown={onPointerDown}
+                    onTouchStart={onPointerDown}
+                    onMouseUp={() => onPointerUp(step, lyric)}
+                    onTouchEnd={() => onPointerUp(step, lyric)}
+                  >
+                    <span className={classnames({ invisible: isRest })}>{japanese}</span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        );
+      })}
     </div>
   );
 }

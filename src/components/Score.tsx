@@ -101,7 +101,7 @@ export default function Score(props: Props) {
                             bottom:
                               2 +
                               spaceHeight *
-                                0.5 * (6 + note.step.index),
+                                0.5 * (6 + (note.isRest ? 6 : note.step.index)),
                           }}
                         >
                           <img

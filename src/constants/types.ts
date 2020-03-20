@@ -1,6 +1,7 @@
 export type Step = {
   step: string;
   index: number;
+  octave: number;
 };
   
 export type Note = {
