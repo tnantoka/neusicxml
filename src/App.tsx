@@ -31,6 +31,8 @@ export default function App() {
     );
     seq.start();
     Transport.start();
+
+    console.log(JSON.stringify(notes));
   };
   const onClickDownload = () => {
     const xml = new Builder(notes).xml();
@@ -116,6 +118,11 @@ export default function App() {
     setNotes([]);
   };
 
+  // Demo
+  const onLoad = (notes: Note[]) => {
+    setNotes(notes);
+  };
+
   return (
     <div className="container mt-3 mb-4">
       <Header {...{ onClickPlay, onClickDownload, notes }} />
@@ -140,7 +147,7 @@ export default function App() {
       <Score
         {...{ notes, selectedNote, onSelect, editingNote, onEdit, onDelete, onChangeLyric, onClear }}
       />
-      <Demo />
+      <Demo {...{ onLoad }}/>
       <p className="text-center mt-3">
         <small>
           (c) 2020 <a href="https://twitter.com/tnantoka">@tnantoka</a>

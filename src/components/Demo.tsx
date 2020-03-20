@@ -1,31 +1,42 @@
 import React from 'react';
 
-export default function Demo() {
+import { Note } from '../constants/types';
+import demos from '../constants/demos';
+
+type Props = {
+  onLoad: (notes: Note[]) => void;
+};
+
+export default function Demo(props: Props) {
+  const { onLoad } = props;
+
   return (
     <div className="mt-3">
-      <ul className="list-group">
-        {['こいのぼり', 'きらきらぼし'].map(name => {
-          return (
-            <li
-              className="list-group-item d-flex justify-content-between align-items-center"
-              key={name}
-            >
-              {name}
-              <div>
-                <button type="button" className="btn btn-link">
-                  <i className="fas fa-play"></i>
-                </button>
-                <button type="button" className="btn btn-link ml-2">
-                  <i className="fas fa-pen"></i>
-                </button>
-                <button type="button" className="btn btn-link ml-2">
-                  <i className="fas fa-arrow-down"></i>
-                </button>
-              </div>
-            </li>
-          );
-        })}
-      </ul>
+      <div className="card">
+        <div className="card-header">
+          Demo
+        </div>
+        <ul className="list-group list-group-flush">
+          {demos.map(demo => {
+            return (
+              <li
+                className="list-group-item d-flex justify-content-between align-items-center"
+                key={demo.name}
+              >
+                <div className="d-flex align-items-center">
+                  {demo.label}
+                  <button type="button" className="btn btn-link ml-1" onClick={() => onLoad(demo.notes)}>
+                    <i className="far fa-edit"></i>
+                  </button>
+                </div>
+                <div>
+                  <audio src={`/sounds/${demo.name}.mp3`} controls />
+                </div>
+              </li>
+            );
+          })}
+        </ul>
+      </div>
     </div>
   );
 }

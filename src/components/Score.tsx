@@ -29,7 +29,7 @@ function Lines() {
           <div
             key={i}
             className={classnames('w-100 border-dark', {
-              'border-bottom': i > 1 && i < 8,
+              'border-bottom': i > 2 && i < 8,
             })}
             style={{ height: spaceHeight }}
           ></div>
