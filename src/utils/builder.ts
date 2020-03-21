@@ -6,9 +6,11 @@ import template from '../constants/template';
 
 export default class Builder {
   notes: Note[]
+  tempo: number
 
-  constructor(notes: Note[]) {
+  constructor(notes: Note[], tempo: number) {
     this.notes = notes;
+    this.tempo = tempo;
   }
 
   events(withRest = false) {
@@ -82,7 +84,7 @@ export default class Builder {
 
   xml() {
     const measures = this.measures();
-    const xml = ejs.render(template, { measures });
+    const xml = ejs.render(template, { measures, tempo: this.tempo });
     return xml;
   }
 }

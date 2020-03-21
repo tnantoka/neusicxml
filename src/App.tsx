@@ -15,9 +15,10 @@ import Builder from './utils/builder';
 export default function App() {
   // Header
   const onClickPlay = () => {
+    Transport.bpm.value = tempo;
     const synth = new Synth().toDestination();
 
-    const events = new Builder(notes).events();
+    const events = new Builder(notes, tempo).events();
     const seq = new Part(
       (time, note) => {
         synth.triggerAttackRelease(
@@ -31,11 +32,9 @@ export default function App() {
     );
     seq.start();
     Transport.start();
-
-    console.log(JSON.stringify(notes));
   };
   const onClickDownload = () => {
-    const xml = new Builder(notes).xml();
+    const xml = new Builder(notes, tempo).xml();
     const blob = new Blob([xml], { type: 'text/xml' });
     const link = document.createElement('a');
     link.download = 'neusicxml.musicxml';
@@ -75,6 +74,11 @@ export default function App() {
     const nextNotes = [...notes];
     nextNotes.forEach(note => note.octave = octave);
     setNotes(nextNotes);
+  };
+
+  const [tempo, setTempo] = useState(110);
+  const onChangeTempo = (tempo: number) => {
+    setTempo(tempo);
   };
 
   // Keyboard
@@ -139,6 +143,8 @@ export default function App() {
           onChangeAccidental,
           octave,
           onChangeOctave,
+          tempo,
+          onChangeTempo,
         }}
       />
       <Keyboard

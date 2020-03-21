@@ -14,6 +14,9 @@ export default `
           <beat-type>4</beat-type>
         </time>
       </attributes>
+      <direction>
+        <sound tempo="<%= tempo %>"/>
+      </direction>
       <note>
         <rest/>
         <duration>16</duration>

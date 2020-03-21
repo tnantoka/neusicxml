@@ -20,6 +20,8 @@ type Props = {
   onChangeAccidental: (accidental: string) => void;
   octave: number;
   onChangeOctave: (octave: number) => void;
+  tempo: number;
+  onChangeTempo: (tempo: number) => void;
 };
 
 export default function Header(props: Props) {
@@ -35,11 +37,14 @@ export default function Header(props: Props) {
     onChangeAccidental,
     octave,
     onChangeOctave,
+    tempo,
+    onChangeTempo,
   } = props;
+console.log(tempo);
 
   return (
     <div className="row">
-      <div className="col-sm-12 mb-3">
+      <div className="col-sm-9 mb-3">
         <div className="d-flex">
           長さ
           <label className="ml-auto">
@@ -62,7 +67,7 @@ export default function Header(props: Props) {
           </label>
         </div>
         <div>
-          <div className="btn-group btn-group-sm w-100">
+          <div className="btn-group w-100">
             {!isRest
               ? noteImages.map(
                   (image, i) => (
@@ -138,6 +143,22 @@ export default function Header(props: Props) {
           </div>
         </div>
       )}
+
+      <div className="col-sm-3 mb-3">
+        <div className="d-flex mb-2">
+          テンポ
+        </div>
+        <div>
+          <input
+            type="number"
+            className="form-control"
+            min="40"
+            max="240"
+            value={tempo}
+            onChange={(e: any) => onChangeTempo(e.target.value)}
+          />
+        </div>
+      </div>
     </div>
   );
 }
