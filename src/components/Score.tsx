@@ -5,8 +5,9 @@ import classnames from 'classnames';
 import { dark } from '../constants/images';
 import { Note } from '../constants/types';
 import { noteDurations, restDurations } from '../constants/durations';
+import accidentals from '../constants/accidentals';
 
-const { noteImages, restImages } = dark;
+const { noteImages, restImages, accidentalImages } = dark;
 
 const spaceHeight = 12;
 
@@ -104,6 +105,12 @@ export default function Score(props: Props) {
                                 0.5 * (6 + (note.isRest ? 6 : note.step.index)),
                           }}
                         >
+                          {!note.isRest && note.accidental !== 'none' && <img
+                            src={accidentalImages[accidentals.findIndex(accidental => accidental.name === note.accidental)]}
+                            height={32}
+                            width={32}
+                            style={{ marginLeft: -16, marginRight: -16 }}
+                          />}
                           <img
                             src={(note.isRest ? restImages : noteImages)[noteDurations.indexOf(note.duration)]}
                             height={44}

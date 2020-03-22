@@ -40,11 +40,10 @@ export default function Header(props: Props) {
     tempo,
     onChangeTempo,
   } = props;
-console.log(tempo);
 
   return (
     <div className="row">
-      <div className="col-sm-9 mb-3">
+      <div className="col-sm-6 mb-3">
         <div className="d-flex">
           長さ
           <label className="ml-auto">
@@ -105,7 +104,7 @@ console.log(tempo);
         </div>
       </div>
 
-      {false && (<div className="col-sm-4 mb-3">
+      <div className="col-sm-3 mb-3">
         <div className="mb-2">変化</div>
         <div>
           <div className="btn-group btn-group-sm w-100">
@@ -114,16 +113,20 @@ console.log(tempo);
                 key={i}
                 type="button"
                 className={classnames('btn btn-secondary pb-2', {
-                  active: accidentals[i] === accidental,
+                  active: accidentals[i].name === accidental,
                 })}
-                onClick={() => onChangeAccidental(accidentals[i])}
+                onClick={() => onChangeAccidental(accidentals[i].name)}
               >
-                <img src={image} width={20} height={20} />
+                {accidentals[i].name === 'none' ? (
+                  <i className="fas fa-minus" style={{ fontSize: 10 }}></i>
+                ) : (
+                  <img src={image} width={20} height={20} />
+                )}
               </button>
             ))}
           </div>
         </div>
-      </div>)}
+      </div>
 
       {false && (
         <div className="col-sm-6 mb-3">

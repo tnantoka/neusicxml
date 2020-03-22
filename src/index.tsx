@@ -15,7 +15,9 @@ ReactDOM.render(<App />, document.getElementById('root'));
 // Learn more about service workers: https://bit.ly/CRA-PWA
 serviceWorker.unregister();
 
-window.addEventListener('beforeunload', (e: BeforeUnloadEvent) => {
-  e.preventDefault();
-  e.returnValue = '';
-});
+if (process.env.NODE_ENV === 'production') {
+  window.addEventListener('beforeunload', (e: BeforeUnloadEvent) => {
+    e.preventDefault();
+    e.returnValue = '';
+  });
+}

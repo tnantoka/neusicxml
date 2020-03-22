@@ -14,12 +14,13 @@ type Props = {
   onChangeAutoDuration: (autoDuration: number | null) => void;
   octave: number;
   isRest: boolean;
+  accidental: string;
 };
 
 const japaneseSteps = ['ド', 'レ', 'ミ', 'ファ', 'ソ', 'ラ', 'シ'];
 
 export default function Keyboard(props: Props) {
-  const { isAutoDuration, onAdd, duration, autoDuration, onChangeAutoDuration, octave, isRest } = props;
+  const { isAutoDuration, onAdd, duration, autoDuration, onChangeAutoDuration, octave, isRest, accidental } = props;
 
   const onClick = (step: Step, lyric: string) => {
     if (isAutoDuration) {
@@ -32,6 +33,7 @@ export default function Keyboard(props: Props) {
       duration,
       lyric,
       isRest,
+      accidental,
     });
   };
 
@@ -46,8 +48,6 @@ export default function Keyboard(props: Props) {
         onChangeAutoDuration(noteDurations[index + 1]);
       }, 300);
       return () => clearTimeout(timer);
-    } else {
-      console.log('done');
     }
   }, [isAutoDuration, autoDuration]);
 
@@ -69,6 +69,7 @@ export default function Keyboard(props: Props) {
       duration: autoDuration!,
       lyric,
       isRest,
+      accidental,
     });
     onChangeAutoDuration(null);
   };

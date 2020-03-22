@@ -32,6 +32,8 @@ export default function App() {
     );
     seq.start();
     Transport.start();
+
+    console.log(JSON.stringify(notes));
   };
   const onClickDownload = () => {
     const xml = new Builder(notes, tempo).xml();
@@ -63,7 +65,7 @@ export default function App() {
     setAutoDuration(autoDuration);
   };
 
-  const [accidental, setAccidental] = useState(accidentals[1]);
+  const [accidental, setAccidental] = useState(accidentals[1].name);
   const onChangeAccidental = (accidental: string) => {
     setAccidental(accidental);
   };
@@ -124,6 +126,9 @@ export default function App() {
 
   // Demo
   const onLoad = (notes: Note[]) => {
+    if (!window.confirm('デモ楽譜を開きますか？（今の楽譜は削除されます）')) {
+      return;
+    }
     setNotes(notes);
   };
 
@@ -148,7 +153,7 @@ export default function App() {
         }}
       />
       <Keyboard
-        {...{ isAutoDuration, onAdd, duration, autoDuration, onChangeAutoDuration, octave, isRest }}
+        {...{ isAutoDuration, onAdd, duration, autoDuration, onChangeAutoDuration, octave, isRest, accidental }}
       />
       <Score
         {...{ notes, selectedNote, onSelect, editingNote, onEdit, onDelete, onChangeLyric, onClear }}

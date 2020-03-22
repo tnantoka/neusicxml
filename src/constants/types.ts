@@ -11,4 +11,5 @@ export type Note = {
   duration: number;
   lyric: string;
   isRest: boolean;
+  accidental: string;
 };

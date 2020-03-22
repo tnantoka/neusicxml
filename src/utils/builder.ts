@@ -3,6 +3,7 @@ import { range } from 'lodash';
 
 import { Note } from '../constants/types';
 import template from '../constants/template';
+import accidentals from '../constants/accidentals';
 
 export default class Builder {
   notes: Note[]
@@ -22,9 +23,12 @@ export default class Builder {
         return time + duration;
       }
 
+      const accidental = accidentals.find(accidental => accidental.name === note.accidental);
+
       const event = {
         time: `0:${time}:0`,
-        note: note.isRest ? '' : `${note.step.step}${note.octave}`, duration: `${note.duration}n`,
+        note: note.isRest ? '' : `${note.step.step}${accidental!.symbol}${note.octave}`,
+        duration: `${note.duration}n`,
         lyric: note.lyric,
       };
       events.push(event);
@@ -49,16 +53,22 @@ export default class Builder {
         measures.push({ notes: [] });
       }
 
+      const step = event.note.split('')[0];
+      const octave = event.note.split('')[event.note.length - 1];
+      const symbol = event.note.length === 3 ? event.note.split('')[1] : '';
+      const accidental = accidentals.find(accidental => accidental.symbol === symbol);
+
       measures[measures.length - 1].notes.push({
         pitch: {
-          step: event.note.split('')[0],
-          octave: event.note.split('')[1],
+          step,
+          octave,
         },
         isRest: !event.note,
         duration,
         lyric: {
           text: event.lyric,
         },
+        accidental: accidental!.alter,
       });
     });
 

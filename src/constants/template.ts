@@ -33,6 +33,9 @@ export default `
         <pitch>
           <step><%= note.pitch.step %></step>
           <octave><%= note.pitch.octave %></octave>
+          <%_ if (!note.isRest && note.accidental !== 0) { _%>
+          <alter><%= note.accidental %></alter>
+          <%_ } _%>
         </pitch>
         <lyric>
           <text><%= note.lyric.text %></text>

@@ -8,8 +8,8 @@ const lightNoteImages: any[] = noteDurations.map(i =>
 const lightRestImages: any[] = restDurations.map(i =>
   loadImage(`light/rest${i}`)
 );
-const lightAccidentalImages: any[] = ['flat', 'natural', 'sharp'].map(name =>
-  loadImage(`light/${name}`)
+const lightAccidentalImages: any[] = accidentals.map(accidental =>
+  loadImage(`light/${accidental.name}`)
 );
 
 const darkNoteImages: any[] = noteDurations.map(i =>
@@ -18,8 +18,8 @@ const darkNoteImages: any[] = noteDurations.map(i =>
 const darkRestImages: any[] = restDurations.map(i =>
   loadImage(`dark/rest${i}`)
 );
-const darkAccidentalImages: any[] = accidentals.map(name =>
-  loadImage(`dark/${name}`)
+const darkAccidentalImages: any[] = accidentals.map(accidental =>
+  loadImage(`dark/${accidental.name}`)
 );
 
 export const light = {
