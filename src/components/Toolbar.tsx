@@ -22,6 +22,8 @@ type Props = {
   onChangeOctave: (octave: number) => void;
   tempo: number;
   onChangeTempo: (tempo: number) => void;
+  beat: number;
+  onChangeBeat: (beat: number) => void;
 };
 
 export default function Header(props: Props) {
@@ -39,6 +41,8 @@ export default function Header(props: Props) {
     onChangeOctave,
     tempo,
     onChangeTempo,
+    beat,
+    onChangeBeat,
   } = props;
 
   return (
@@ -66,7 +70,7 @@ export default function Header(props: Props) {
           </label>
         </div>
         <div>
-          <div className="btn-group w-100">
+          <div className="btn-group btn-group-sm w-100">
             {!isRest
               ? noteImages.map(
                   (image, i) => (
@@ -148,18 +152,37 @@ export default function Header(props: Props) {
       )}
 
       <div className="col-sm-3 mb-3">
-        <div className="d-flex mb-2">
-          テンポ
-        </div>
-        <div>
-          <input
-            type="number"
-            className="form-control"
-            min="40"
-            max="240"
-            value={tempo}
-            onChange={(e: any) => onChangeTempo(e.target.value)}
-          />
+        <div className="d-flex flex-column h-100 justify-content-between">
+          <div className="input-group input-group-sm">
+            <div className="input-group-prepend">
+              <span className="input-group-text">テンポ</span>
+            </div>
+            <input
+              type="number"
+              className="form-control"
+              min="40"
+              max="240"
+              value={tempo}
+              onChange={(e: any) => onChangeTempo(e.target.value)}
+            />
+          </div>
+
+          <div className="input-group input-group-sm">
+            <div className="input-group-prepend">
+              <span className="input-group-text">拍子　</span>
+            </div>
+            <input
+              type="number"
+              className="form-control"
+              min="2"
+              max="4"
+              value={beat}
+              onChange={(e: any) => onChangeBeat(e.target.value)}
+            />
+            <div className="input-group-append">
+              <span className="input-group-text"> / 4</span>
+            </div>
+          </div>
         </div>
       </div>
     </div>

@@ -10,7 +10,7 @@ export default `
           <fifths>0</fifths>
         </key>
         <time>
-          <beats>4</beats>
+          <beats><%= beat %></beats>
           <beat-type>4</beat-type>
         </time>
       </attributes>

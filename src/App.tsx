@@ -7,6 +7,7 @@ import Toolbar from './components/Toolbar';
 import Keyboard from './components/Keyboard';
 import Score from './components/Score';
 import Demo from './components/Demo';
+import Help from './components/Help';
 import accidentals from './constants/accidentals';
 import { noteDurations } from './constants/durations';
 import { Note } from './constants/types';
@@ -18,7 +19,7 @@ export default function App() {
     Transport.bpm.value = tempo;
     const synth = new Synth().toDestination();
 
-    const events = new Builder(notes, tempo).events();
+    const events = new Builder(notes, tempo, beat).events();
     const seq = new Part(
       (time, note) => {
         synth.triggerAttackRelease(
@@ -36,7 +37,7 @@ export default function App() {
     console.log(JSON.stringify(notes));
   };
   const onClickDownload = () => {
-    const xml = new Builder(notes, tempo).xml();
+    const xml = new Builder(notes, tempo, beat).xml();
     const blob = new Blob([xml], { type: 'text/xml' });
     const link = document.createElement('a');
     link.download = 'neusicxml.musicxml';
@@ -83,6 +84,11 @@ export default function App() {
     setTempo(tempo);
   };
 
+  const [beat, setBeat] = useState(4);
+  const onChangeBeat = (beat: number) => {
+    setBeat(beat);
+  };
+
   // Keyboard
   const onAdd = (note: Note) => {
     const nextNotes = [...notes];
@@ -125,11 +131,12 @@ export default function App() {
   };
 
   // Demo
-  const onLoad = (notes: Note[]) => {
+  const onLoad = (notes: Note[], beat: number) => {
     if (!window.confirm('デモ楽譜を開きますか？（今の楽譜は削除されます）')) {
       return;
     }
     setNotes(notes);
+    setBeat(beat);
   };
 
   return (
@@ -150,6 +157,8 @@ export default function App() {
           onChangeOctave,
           tempo,
           onChangeTempo,
+          beat,
+          onChangeBeat,
         }}
       />
       <Keyboard
@@ -159,6 +168,7 @@ export default function App() {
         {...{ notes, selectedNote, onSelect, editingNote, onEdit, onDelete, onChangeLyric, onClear }}
       />
       <Demo {...{ onLoad }}/>
+      {false && <Help />}
       <p className="text-center mt-3">
         <small>
           (c) 2020 <a href="https://twitter.com/tnantoka">@tnantoka</a>

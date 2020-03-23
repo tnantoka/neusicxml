@@ -4,7 +4,7 @@ import { Note } from '../constants/types';
 import demos from '../constants/demos';
 
 type Props = {
-  onLoad: (notes: Note[]) => void;
+  onLoad: (notes: Note[], beat: number) => void;
 };
 
 export default function Demo(props: Props) {
@@ -25,7 +25,7 @@ export default function Demo(props: Props) {
               >
                 <div className="d-flex align-items-center">
                   {demo.label}
-                  <button type="button" className="btn btn-link ml-1" onClick={() => onLoad(demo.notes)}>
+                  <button type="button" className="btn btn-link ml-1" onClick={() => onLoad(demo.notes, demo.beat)}>
                     <i className="far fa-edit"></i>
                   </button>
                 </div>

@@ -12,7 +12,7 @@ test('events', () => {
     { time: '0:1:0', note: 'D4', duration: '8n', lyric: 'レ' },
     { time: '0:2:0', note: 'E4', duration: '4n', lyric: 'ミ' },
   ];
-  const events = new Builder(notes).events();
+  const events = new Builder(notes, 110, 4).events();
   expect(events).toEqual(expected);
 });
 
@@ -37,7 +37,7 @@ test('measures', () => {
       ],
     },
   ];
-  const measures = new Builder(notes).measures();
+  const measures = new Builder(notes, 110, 4).measures();
   expect(measures).toEqual(expected);
 });
 
@@ -48,7 +48,7 @@ test('xml', () => {
     { id: 3, step: { step: '', index: -1 }, octave: 0, duration: 8, lyric: '', isRest: true, accidental: 'none' },
     { id: 4, step: { step: 'E', index: 2 }, octave: 4, duration: 4, lyric: 'ミ', isRest: false, accidental: 'none' },
  ];
-  const xml = new Builder(notes).xml();
+  const xml = new Builder(notes, 110, 4).xml();
   const expected = `    <measure>
       <note>
         <pitch>

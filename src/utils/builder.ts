@@ -8,10 +8,12 @@ import accidentals from '../constants/accidentals';
 export default class Builder {
   notes: Note[]
   tempo: number
+  beat: number
 
-  constructor(notes: Note[], tempo: number) {
+  constructor(notes: Note[], tempo: number, beat: number) {
     this.notes = notes;
     this.tempo = tempo;
+    this.beat = beat;
   }
 
   events(withRest = false) {
@@ -39,6 +41,10 @@ export default class Builder {
     return events;
   }
 
+  get beats() {
+    return this.beat * 4;
+  }
+
   measures() {
     const events = this.events(true);
 
@@ -49,7 +55,7 @@ export default class Builder {
       const prevTimes = measures[measures.length - 1].notes.reduce((result, item: any) => result + item.duration, 0);
       const times = prevTimes + duration;
 
-      if (times > 16) {
+      if (times > this.beats) {
         measures.push({ notes: [] });
       }
 
@@ -74,7 +80,7 @@ export default class Builder {
 
     measures.forEach(measure => {
       const times = measure.notes.reduce((result, item: any) => result + item.duration, 0);
-      range(Math.floor(16 - times)).forEach(() => {
+      range(Math.floor(this.beats - times)).forEach(() => {
         measure.notes.push({
           pitch: {
             step: '',
@@ -94,7 +100,7 @@ export default class Builder {
 
   xml() {
     const measures = this.measures();
-    const xml = ejs.render(template, { measures, tempo: this.tempo });
+    const xml = ejs.render(template, { measures, tempo: this.tempo, beat: this.beat });
     return xml;
   }
 }
